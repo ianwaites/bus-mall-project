@@ -1,3 +1,14 @@
 html {
-  
+
+}
+
+#images li {
+  display: inline-block;
+}
+
+#images li img {
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+  padding: 30px;
 }

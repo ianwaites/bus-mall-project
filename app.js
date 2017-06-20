@@ -12,7 +12,7 @@
 
 var allImages = [];
 var queImages = [];
-var images = document.getElementById('container');
+var images = document.getElementById('images');
 var imageOneClicks = 0;
 var imageTwoClicks = 0;
 var imageThreeClicks = 0;
