@@ -82,7 +82,7 @@ function clickHandler(e){
     console.log(getImgId);
     renderImages();
   } else {
-    
+
   }
 }
 
