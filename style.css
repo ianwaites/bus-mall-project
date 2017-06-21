@@ -6,7 +6,7 @@ html {
   display: inline-block;
 }
 
-#images li img {
+img {
   display: inline-block;
   width: 200px;
   height: 200px;

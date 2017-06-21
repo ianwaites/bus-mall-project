@@ -1,94 +1,108 @@
 'use strict';
 
-// The thing you want to build today will select three random photos from the image directory and display them side-by-side-by-side in the browser window.
+ImgObj.imgContainer = document.getElementById('container');
 
-// - In addition, you'll want to be able to receive clicks on those displayed images, and track those clicks for each image. You'll also want to track how many times each image is displayed, for statistical purposes.
+// Array holding the properties of the constructor and the overall total number of clicks and the total times an image was shown
+ImgObj.allImgs = [];
+ImgObj.totalOfClicks = 0;
+ImgObj.totalShown = 0;
 
-// - Upon receiving a click, three new non-duplicating random images need to be automatically displayed. In other words, the three images that are displayed should contain no duplicates, nor should they duplicate with any images that we displayed immediately before.
-
-// - To do this, you'll want a constructor function that creates an object associated with each image, and has (at a minimum) properties for the name of the image (to be used for display purposes), its filepath, the number of times it has been shown, and the number of times it has been clicked. You'll probably find it useful to create a property that contains a text string you can use as an ID in HTML.
-
-// - After 25 selections have been made, turn off the event listeners on the images (to prevent additional voting) and also display a list of the products with votes received with each list item looking like "3 votes for the Banana Slicer".
-
-var allImages = [];
-var queImages = [];
-var images = document.getElementById('images');
-var imageOneClicks = 0;
-var imageTwoClicks = 0;
-var imageThreeClicks = 0;
-
-function imageObj(name, path, tally, views) {
-  this.name = name;
+function ImgObj(fileName, path) {
+  this.fileName = fileName;
   this.path = path;
-  this.tally = tally;
-  this.views = views;
-  allImages.push(this);
+  this.tally = 0;
+  this.views = 0;
+  ImgObj.allImgs.push(this);
 }
+
+// Prototype creates images everytime the constructor is used
+ImgObj.prototype.createImgEl = function(eventHandler){
+  var imgEl = document.createElement('img');
+  imgEl.setAttribute('id', this.fileName);
+  imgEl.setAttribute('src', this.path);
+  imgEl.addEventListener('click', eventHandler);
+  this.views++;
+  ImgObj.totalShown++;
+  return imgEl;
+};
 
 // creates random number
 var getRandomNumber = function() {
-  for (var i = 0; i < 3; i++) {
-    var randomNumber = Math.floor(Math.random() * allImages.length);
-    queImages.push(allImages[randomNumber]);
-  }
+  return Math.floor(Math.random() * ImgObj.allImgs.length);
 };
 
-var renderImage = function() {
-  getRandomNumber();
-  for (var i = 0; i < queImages.length; i++) {
-    var liEl = document.createElement('li');
-    var imgEl = document.createElement('IMG');
-
-    imgEl.src = queImages[i].path;
-    imgEl.id = queImages[i].name;
-    liEl.appendChild(imgEl);
-    images.appendChild(liEl);
+// Assigning random numbers to variables that are returned into an array
+function imagesArray(){
+  var imgIndexOne = getRandomNumber();
+  console.log(imgIndexOne);
+  var imgIndexTwo = getRandomNumber();
+  console.log(imgIndexTwo);
+  var imgIndexThree = getRandomNumber();
+  while (imgIndexOne === imgIndexTwo || imgIndexOne === imgIndexThree) {
+    imgIndexOne = getRandomNumber();
+  }
+  while (imgIndexTwo === imgIndexOne || imgIndexTwo === imgIndexThree) {
+    imgIndexTwo = getRandomNumber();
+  }
+  while (imgIndexThree === imgIndexOne || imgIndexThree === imgIndexTwo) {
+    imgIndexThree = getRandomNumber();
   }
 
-};
-
-// function myFunction() {
-//     var x = document.createElement("IMG");
-//     x.setAttribute("src", "img_pulpit.jpg");
-//     x.setAttribute("width", "304");
-//     x.setAttribute("height", "228");
-//     x.setAttribute("alt", "The Pulpit Rock");
-//     document.body.appendChild(x);
-// }
-
-var bag = new imageObj('bag', 'img/assets/bag.jpg');
-var banana = new imageObj('banana', 'img/assets/banana.jpg');
-var bathroom = new imageObj('bathroom', 'img/assets/bathroom.jpg');
-var boots = new imageObj('boots', 'img/assets/boots.jpg');
-var breakfast = new imageObj('breakfast', 'img/assets/breakfast.jpg');
-var bubblegum = new imageObj('bubblegum', 'img/assets/bubblegum.jpg');
-var chair = new imageObj('chair', 'img/assets/chair.jpg');
-var cthulhu = new imageObj('bthulhu', 'img/assets/cthulhu.jpg');
-var dogDuck = new imageObj('dogduck', 'img/assets/dog-duck.jpg');
-var dragon = new imageObj('dragon', 'img/assets/dragon.jpg');
-var pen = new imageObj('pen', 'img/assets/pen.jpg');
-var petSweep = new imageObj('pet-sweep', 'img/assets/pet-sweep.jpg');
-var scissors = new imageObj('scissors', 'img/assets/scissors.jpg');
-var shark = new imageObj('shark', 'img/assets/shark.jpg');
-var sweep = new imageObj('sweep', 'img/assets/sweep.png');
-var tauntaun = new imageObj('tauntaun', 'img/assets/tauntaun.jpg');
-var unicorn = new imageObj('unicorn', 'img/assets/unicorn.jpg');
-var usb = new imageObj('usb', 'img/assets/usb.gif');
-var waterCan = new imageObj('water-can', 'img/assets/water-can.jpg');
-var wineGlass = new imageObj('wine-glass', 'img/assets/wine-glass.jpg');
-
-function handleClick(e) {
-  console.log('click');
-  images.innerHTML = '';
-  queImages = [];
-  var imageOne = document.getElementById('imageone');
-  var imageTwo = document.getElementById('imagetwo');
-  var imageThree = document.getElementById('imagethree');
-
-  if(event.target.id === 'imageone' || event.target.id === 'imagetwo' || event.target.id === 'imagethree') {
-
-  }
-  renderImage();
+  return [imgIndexOne, imgIndexTwo, imgIndexThree];
 }
 
-images.addEventListener('click', handleClick);
+// Using the random numbers from imagesArray() to pick indexes out of the allImgs array then printing them to the DOM
+function renderImages(){
+  ImgObj.imgContainer.textContent = '';
+  var theImageArray = imagesArray();
+  var imgOne = ImgObj.allImgs[theImageArray[0]];
+  var imgTwo = ImgObj.allImgs[theImageArray[1]];
+  var imgThree = ImgObj.allImgs[theImageArray[2]];
+  var createOne = imgOne.createImgEl(clickHandler);
+  var createTwo = imgTwo.createImgEl(clickHandler);
+  var createThree = imgThree.createImgEl(clickHandler);
+
+  ImgObj.imgContainer.appendChild(createOne);
+  ImgObj.imgContainer.appendChild(createTwo);
+  ImgObj.imgContainer.appendChild(createThree);
+}
+
+// Counting the number of clicks of each image by getting the the fileName from the id and marking a tally for when a specific fileName is clicked
+function clickHandler(e){
+  ImgObj.totalOfClicks++;
+  if (ImgObj.totalOfClicks <= 25){
+    var getImgId = event.target.id;
+    for(var i = 0; i < ImgObj.allImgs.length; i++){
+      if (getImgId === ImgObj.allImgs[i].fileName){
+        ImgObj.allImgs[i].tally++;
+        break;
+      }
+    }
+    console.log(getImgId);
+    renderImages();
+  }
+}
+
+// Adds data to the constructor
+var bag = new ImgObj('bag', 'img/assets/bag.jpg');
+var banana = new ImgObj('banana', 'img/assets/banana.jpg');
+var bathroom = new ImgObj('bathroom', 'img/assets/bathroom.jpg');
+var boots = new ImgObj('boots', 'img/assets/boots.jpg');
+var breakfast = new ImgObj('breakfast', 'img/assets/breakfast.jpg');
+var bubblegum = new ImgObj('bubblegum', 'img/assets/bubblegum.jpg');
+var chair = new ImgObj('chair', 'img/assets/chair.jpg');
+var cthulhu = new ImgObj('bthulhu', 'img/assets/cthulhu.jpg');
+var dogDuck = new ImgObj('dogduck', 'img/assets/dog-duck.jpg');
+var dragon = new ImgObj('dragon', 'img/assets/dragon.jpg');
+var pen = new ImgObj('pen', 'img/assets/pen.jpg');
+var petSweep = new ImgObj('pet-sweep', 'img/assets/pet-sweep.jpg');
+var scissors = new ImgObj('scissors', 'img/assets/scissors.jpg');
+var shark = new ImgObj('shark', 'img/assets/shark.jpg');
+var sweep = new ImgObj('sweep', 'img/assets/sweep.png');
+var tauntaun = new ImgObj('tauntaun', 'img/assets/tauntaun.jpg');
+var unicorn = new ImgObj('unicorn', 'img/assets/unicorn.jpg');
+var usb = new ImgObj('usb', 'img/assets/usb.gif');
+var waterCan = new ImgObj('water-can', 'img/assets/water-can.jpg');
+var wineGlass = new ImgObj('wine-glass', 'img/assets/wine-glass.jpg');
+
+renderImages();
