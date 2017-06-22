@@ -79,7 +79,7 @@ function getRandomNumber() {
       newImages.push(allImages[randomNumber]);
       allImages[randomNumber].views ++;
     }
-  }  oldImages = newImages;
+  } oldImages = newImages;
 };
 
 function renderImage(){
@@ -101,11 +101,11 @@ function renderButton(){
 
 var testStorage = function() {
   if (localStorage.data) {
-    allImages = JSON.parse(localStorage.data)
+    allImages = JSON.parse(localStorage.data);
   } else {
     renderImage();
   }
-}
+};
 
 // Event handler
 function handleClick(e) {
@@ -118,37 +118,38 @@ function handleClick(e) {
       localStorage.setItem('userData', JSON.stringify(allImages));
       var remImg = document.getElementById('container');
       while (remImg.firstChild) {
-        remImg.removeChild(remImg.firstChild)
+        remImg.removeChild(remImg.firstChild);
       }
 
-    if(imageTotalClicks === 25){
-    var remImg = document.getElementById('container');
-    while (remImg.firstChild) {
-      remImg.removeChild(remImg.firstChild)
-      }
-      images.removeEventListener('click', handleClick);
-          var secEl = document.createElement('section');
-          secEl.id = 'results';
-          var h2El = document.createElement('h2');
-          h2El.textContent = 'Results';
-          secEl.appendChild(h2El);
-          var ulEl = document.createElement('ul');
-          for (var i = 0; i < allImages.length; i++) {
-            var liEl = document.createElement('li');
-            liEl.textContent = allImages[i].tally + ' votes for ' + allImages[i].name + '.';
-            ulEl.appendChild(liEl);
-          }
-          secEl.appendChild(ulEl);
-          images.appendChild(secEl);
-          renderButton();
-          createData();
-          drawChart();
-        } else {
+      if(imageTotalClicks === 25){
+        var remImg = document.getElementById('container');
+        while (remImg.firstChild) {
+          remImg.removeChild(remImg.firstChild);
+        }
+        images.removeEventListener('click', handleClick);
+        var secEl = document.createElement('section');
+        secEl.id = 'results';
+        var h2El = document.createElement('h2');
+        h2El.textContent = 'Results';
+        secEl.appendChild(h2El);
+        var ulEl = document.createElement('ul');
+        for (var i = 0; i < allImages.length; i++) {
+          var liEl = document.createElement('li');
+          liEl.textContent = allImages[i].tally + ' votes for ' + allImages[i].name + '.';
+          ulEl.appendChild(liEl);
+        }
+        secEl.appendChild(ulEl);
+        images.appendChild(secEl);
+        renderButton();
+        createData();
+        drawChart();
+      } else {
         renderImage();
       }
     }
   }
 }
+
 var bag = new ImageObj('bag', 'img/assets/bag.jpg');
 var banana = new ImageObj('banana', 'img/assets/banana.jpg');
 var bathroom = new ImageObj('bathroom', 'img/assets/bathroom.jpg');
@@ -174,17 +175,14 @@ var wineGlass = new ImageObj('wine-glass', 'img/assets/wine-glass.jpg');
 testStorage;
 renderImage();
 
-
-
 var chartNames = [];
 var chartTally = [];
 function createData () {
-for (var i = 0; i < allImages.length; i++) {
-  chartNames.push(allImages[i].name);
-  chartTally.push(allImages[i].tally);
+  for (var i = 0; i < allImages.length; i++) {
+    chartNames.push(allImages[i].name);
+    chartTally.push(allImages[i].tally);
   };
 }
-
 
 var chartData = {
   labels: chartNames, // titles array we declared earlier
@@ -256,8 +254,5 @@ function drawChart() {
   });
   chartDrawn = true;
 }
-
-
-
 
 images.addEventListener('click', handleClick);
